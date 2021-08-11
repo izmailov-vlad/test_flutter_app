@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[ActionButtons(), Expanded(child: UserList())],
+            children: <Widget>[Expanded(child: UserList())],
           )),
     );
   }

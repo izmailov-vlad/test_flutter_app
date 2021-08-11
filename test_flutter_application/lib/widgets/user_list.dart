@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_application/bloc/user_bloc.dart';
+import 'package:test_flutter_application/bloc/user_event.dart';
 import 'package:test_flutter_application/bloc/user_state.dart';
 import 'package:test_flutter_application/view/user_info.dart';
 
@@ -14,10 +15,18 @@ class UserList extends StatefulWidget {
 class _UserList extends State<UserList> {
   @override
   Widget build(BuildContext context) {
+    final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
+    GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey<RefreshIndicatorState>();
+    
     return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
       if (state is UserEmptyState) {
         return Center(
-          child: Text('No data receiver, press load button'),
+          child: Column(children: [
+            Text('No data receiver, press load button'),
+            TextButton(onPressed: () {
+              userBloc.add(UserLoadEvent());
+            }, child: Text('Load users'))
+          ], mainAxisAlignment: MainAxisAlignment.center,)
         );
       }
 
@@ -28,7 +37,13 @@ class _UserList extends State<UserList> {
       }
 
       if (state is UserLoadedState) {
-        return ListView.builder(
+        return RefreshIndicator(
+          onRefresh: () async{
+            userBloc.add(UserLoadEvent());
+          },
+          key: refreshKey,
+          child: 
+        ListView.builder(
             itemCount: state.loadedUser.length,
             itemBuilder: (context, index) => Container(
                   child: ListTile(
@@ -49,7 +64,8 @@ class _UserList extends State<UserList> {
                     ),
                     contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 20),
                   ),
-                ));
+                )));
+        
       }
 
       if (state is UserErrorState) {
