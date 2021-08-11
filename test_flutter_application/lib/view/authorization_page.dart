@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:flutter_login/theme.dart';
 import 'package:test_flutter_application/view/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,8 +12,8 @@ class AuthorizationPage extends StatelessWidget {
   Future<Null> _authUser(LoginData data) {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
-        auth.createUserWithEmailAndPassword(email: data.name, password: data.password);
-        return null;
+      auth.signInWithEmailAndPassword(email: data.name, password: data.password);
+      return null;
     });
   }
 
