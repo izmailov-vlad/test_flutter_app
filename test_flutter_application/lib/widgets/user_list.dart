@@ -16,18 +16,23 @@ class _UserList extends State<UserList> {
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = BlocProvider.of<UserBloc>(context);
-    GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey<RefreshIndicatorState>();
-    
+    GlobalKey<RefreshIndicatorState> refreshKey =
+        GlobalKey<RefreshIndicatorState>();
+
     return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
       if (state is UserEmptyState) {
         return Center(
-          child: Column(children: [
+            child: Column(
+          children: [
             Text('No data receiver, press load button'),
-            TextButton(onPressed: () {
-              userBloc.add(UserLoadEvent());
-            }, child: Text('Load users'))
-          ], mainAxisAlignment: MainAxisAlignment.center,)
-        );
+            TextButton(
+                onPressed: () {
+                  userBloc.add(UserLoadEvent());
+                },
+                child: Text('Load users'))
+          ],
+          mainAxisAlignment: MainAxisAlignment.center,
+        ));
       }
 
       if (state is UserLoadingState) {
@@ -38,34 +43,32 @@ class _UserList extends State<UserList> {
 
       if (state is UserLoadedState) {
         return RefreshIndicator(
-          onRefresh: () async{
-            userBloc.add(UserLoadEvent());
-          },
-          key: refreshKey,
-          child: 
-        ListView.builder(
-            itemCount: state.loadedUser.length,
-            itemBuilder: (context, index) => Container(
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => UserInfo(
-                              state.loadedUser[index].name,
-                              state.loadedUser[index].location,
-                              state.loadedUser[index].picture)));
-                    },
-                    leading:
-                        Image.network(state.loadedUser[index].picture.large),
-                    title: Column(
-                      children: [
-                        Text(state.loadedUser[index].name.first),
-                        Text(state.loadedUser[index].location.city)
-                      ],
-                    ),
-                    contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 20),
-                  ),
-                )));
-        
+            onRefresh: () async {
+              userBloc.add(UserLoadEvent());
+            },
+            key: refreshKey,
+            child: ListView.builder(
+                itemCount: state.loadedUser.length,
+                itemBuilder: (context, index) => Container(
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => UserInfo(
+                                  state.loadedUser[index].name,
+                                  state.loadedUser[index].location,
+                                  state.loadedUser[index].picture)));
+                        },
+                        leading: Image.network(
+                            state.loadedUser[index].picture.large),
+                        title: Column(
+                          children: [
+                            Text(state.loadedUser[index].name.first),
+                            Text(state.loadedUser[index].location.city)
+                          ],
+                        ),
+                        contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+                      ),
+                    )));
       }
 
       if (state is UserErrorState) {

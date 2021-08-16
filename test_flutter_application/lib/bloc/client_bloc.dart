@@ -1,27 +1,41 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_application/bloc/user_event.dart';
 import 'package:test_flutter_application/bloc/user_state.dart';
+import 'package:test_flutter_application/models/client.dart';
 import 'package:test_flutter_application/models/user.dart';
+import 'package:test_flutter_application/services/auth.dart';
 import 'package:test_flutter_application/services/user_repository.dart';
 
-class ClientBloc extends Bloc<UserEvent, UserState> {
-  final UserRepository userRepository;
+import 'client_event.dart';
+import 'client_state.dart';
 
-  ClientBloc(this.userRepository) : super(UserEmptyState());
+class ClientBloc extends Bloc<ClientEvent, ClientState> {
+  final AuthService _authService;
+
+  ClientBloc(this._authService) : super(ClientNotAuthorizedState());
 
   @override
-  Stream<UserState> mapEventToState(UserEvent event) async* {
-    if (event is UserLoadEvent) {
-      yield UserLoadingState();
+  Stream<ClientState> mapEventToState(ClientEvent event) async* {
+    if (event is ClientAuthorizeEvent) {
+      yield ClientAuthorizingState();
       try {
-        final List<User> _loadedUserList = await userRepository.getAllUsers();
-        yield UserLoadedState(loadedUser: _loadedUserList);
+        final Client? _client = await _authService.singInWithEmailAndPassword(
+            event.email, event.password);
+        yield ClientAuthorizedState();
       } catch (e) {
         print(e.toString());
-        yield UserErrorState();
+        yield ClientErrorState();
       }
-    } else if (event is UserClearEvent) {
-      yield UserEmptyState();
-    }
+    } else if (event is ClientRegisterEvent) {
+      yield ClientRegistratingState();
+      try {
+        final Client? _client = await _authService
+            .registerInWithEmailAndPassword(event.email, event.password);
+        yield ClientRegisteredState();
+      } catch (e) {
+        print(e.toString());
+        yield ClientErrorState();
+      }
+    } else if (event is ClientLogoutEvent) {}
   }
 }

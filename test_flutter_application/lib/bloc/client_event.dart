@@ -1,5 +1,15 @@
 abstract class ClientEvent {}
 
-class ClientLoadEvent extends ClientEvent {}
+class ClientAuthorizeEvent extends ClientEvent {
+  String email;
+  String password;
+  ClientAuthorizeEvent({required this.email, required this.password});
+}
 
-class ClientClearEvent extends ClientEvent {}
+class ClientRegisterEvent extends ClientEvent {
+  String email;
+  String password;
+  ClientRegisterEvent({required this.email, required this.password});
+}
+
+class ClientLogoutEvent extends ClientEvent {}

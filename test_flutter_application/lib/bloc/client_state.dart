@@ -1,12 +1,15 @@
+import 'package:test_flutter_application/models/client.dart';
+
 abstract class ClientState {}
 
-class ClientEmptyState extends ClientState {}
+class ClientNotAuthorizedState extends ClientState {}
 
-class ClientLoadingState extends ClientState {}
+class ClientAuthorizingState extends ClientState {}
 
-class ClientLoadedState extends ClientState {
-  List<dynamic> loadedUser;
-  ClientLoadedState({required this.loadedUser});
-}
+class ClientRegistratingState extends ClientState {}
+
+class ClientAuthorizedState extends ClientState {}
+
+class ClientRegisteredState extends ClientState {}
 
 class ClientErrorState extends ClientState {}

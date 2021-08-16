@@ -1,11 +1,5 @@
-abstract class UserEvent {
+abstract class UserEvent {}
 
-}
+class UserLoadEvent extends UserEvent {}
 
-class UserLoadEvent extends UserEvent {
-
-}
-
-class UserClearEvent extends UserEvent {
-
-}
+class UserClearEvent extends UserEvent {}
