@@ -33,7 +33,7 @@ class AuthService {
   }
 
   Stream<Client?> get currentUser {
-    return _auth.onAuthStateChanged.map(
-        (FirebaseUser user) => user != null ? Client.fromFirebase(user) : null);
+    return _auth.onAuthStateChanged.map((FirebaseUser? user) =>
+        user != null ? Client.fromFirebase(user) : null);
   }
 }

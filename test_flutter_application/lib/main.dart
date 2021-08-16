@@ -1,9 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_flutter_application/models/client.dart';
+import 'package:test_flutter_application/services/auth.dart';
 import 'package:test_flutter_application/view/splash_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(StreamProvider<Client?>.value(
+    value: AuthService().currentUser,
+    initialData: null,
+    child: MaterialApp(home: SplashPage()),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -11,6 +18,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: SplashPage());
+    return Container();
   }
 }
